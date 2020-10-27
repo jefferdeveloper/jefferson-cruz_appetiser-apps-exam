@@ -1,106 +1,111 @@
 <template>
-<div>
-  <h1>Login</h1>
-  <validation-observer
-    ref="observer"
-    v-slot="{ invalid }"
-  >
-    <form @submit.prevent="submit">
-      <validation-provider
-        v-slot="{ errors }"
-        name="email"
-        rules="required|email"
-      >
-        <v-text-field
-          v-model="email"
-          :error-messages="errors"
-          label="E-mail"
-          required
-        ></v-text-field>
-      </validation-provider>
-      <validation-provider
-        v-slot="{ errors }"
-        name="password"
-        vid="password"
-        rules="required|max:30"
-      >
-        <v-text-field
-          v-model="password"
-          :error-messages="errors"
-          label="Password"
-          required
-        ></v-text-field>
-      </validation-provider>
-      <v-btn
-        class="mr-4"
-        type="submit"
-        :disabled="invalid"
-      >
-        Login
-      </v-btn>
-      <v-btn @click="clear">
-        clear
-      </v-btn>
-    </form>
-  </validation-observer>
+<div class="c-main">
+  <div class="c-banner"></div>
+  <div class="c-form">
+    <div class="c-form__wrap">
+      <div class="c-h2__wrap">
+        <a-icon class="c-icon" type="github" />
+        <h2>Project Name</h2>
+      </div>
+      <h1>Welcome Back</h1>
+      <p>
+        But I must explain to you how all this mistaken idea of denouncing
+      </p>
+
+      <a-form :form="form" @submit="handleSubmit" hideRequiredMark :colon="false">
+        <a-form-item label="E-mail">
+          <a-input
+            size="large"
+            placeholder="Type in email address"
+            v-decorator="[
+              'username',
+              {
+                trigger: 'change',
+                rules: [
+                  {
+                    type: 'email',
+                    message: 'The input is not valid E-mail!',
+                  },
+                  {
+                    required: true,
+                    message: 'Please input your E-mail!',
+                  }
+                ],
+              },
+            ]"
+          />
+        </a-form-item>
+        <a-form-item label="Password">
+          <a-input
+            size="large"
+            placeholder="Type in password"
+            v-decorator="[
+              'password',
+              {
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please input password!',
+                  }
+                ],
+              },
+            ]"
+            type="password"
+          />
+        </a-form-item>
+        <a-form-item>
+          <div class="c-btn__wrap">
+            <a-button class="c-btn c-btn--sub" size="large">
+              <router-link to="register">
+                Sign up
+              </router-link>
+            </a-button>
+            <a-button class="c-btn c-btn--main" type="primary" size="large" html-type="submit">
+              Login <img class="c-icon--img"  src="@/assets/i-login.svg" alt="">
+            </a-button>
+          </div>
+        </a-form-item>
+      </a-form>
+
+    </div>
+
+  </div>
 </div>
 </template>
 
 <script>
-  import { required, email, max } from 'vee-validate/dist/rules'
-  import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
-
-  setInteractionMode('eager')
-
-  extend('required', {
-    ...required,
-    message: 'Field {_field_} can not be empty',
-  })
-
-  extend('max', {
-    ...max,
-    message: 'Field {_field_} may not be greater than {length} characters',
-  })
-
-  extend('email', {
-    ...email,
-    message: 'Email must be valid',
-  })
-
   export default {
-    components: {
-      ValidationProvider,
-      ValidationObserver,
+    beforeCreate() {
+      this.form = this.$form.createForm(this, { name: 'login' });
     },
-    data: () => ({
-      email: 'jeffergit@gmail.com',
-      password: '12345678',
-    }),
+    mounted() {
+      this.form.setFieldsValue({
+        username: '1@gmail.com',
+        password: '12345678'
+      });
+    },
     methods: {
-      submit () {
-        this.$refs.observer.validate()
-        const payload = {
-          username: this.email,
-          password: this.password
-        }
-        console.log(payload)
-        window.axios.post('/auth/login', payload).then(res => {
-          console.log(res.data)
-          console.log('res')
-        }).catch(err => {
-          console.log(err)
-          console.log('err')
-        })
+      reset() {
+        this.form.resetFields();
       },
-      clear () {
-        this.email = ''
-        this.password = '',
-        this.$refs.observer.reset()
-      },
-    },
+      handleSubmit(e) {
+        e.preventDefault();
+        this.form.validateFieldsAndScroll((err, values) => {
+          if (!err) {
+            console.log('Received values of form: ', values);
+            window.axios.post('/auth/login', values).then(res => {
+              console.log(res.data)
+              if(res.data.success) {
+                localStorage.setItem('tokenData',JSON.stringify(res.data.data))
+                this.$router.push('success')
+              }
+            }).catch(err => {
+              console.log(err)
+              this.$message.error('Login failed!', 5);
+            })
+          }
+        });
+      }
+    }
   }
 </script>
-
-<style>
-
-</style>

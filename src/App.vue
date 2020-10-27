@@ -113,6 +113,14 @@ export default {
     top: 50%;
     right: 20px;
   }
+  .c-icon--img {
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+  }
   .c-terms {
     text-align: center;
     display: block;

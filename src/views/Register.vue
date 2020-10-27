@@ -92,8 +92,10 @@
         </a-form-item>
         <a-form-item>
           <div class="c-btn__wrap">
-            <a-button class="c-btn c-btn--sub" size="large" @click.prevent="reset">
-              Back
+            <a-button class="c-btn c-btn--sub" size="large">
+              <router-link to="login">
+                Back
+              </router-link>
             </a-button>
             <a-button class="c-btn c-btn--main" type="primary" size="large" html-type="submit">
               Sign up <a-icon class="c-icon--right" type="arrow-right" />
@@ -129,9 +131,6 @@
       });
     },
     methods: {
-      submit () {
-
-      },
       reset() {
         this.form.resetFields();
       },
@@ -143,11 +142,11 @@
             window.axios.post('/auth/register', values).then(res => {
               console.log(res.data)
               localStorage.setItem('tokenData',JSON.stringify(res.data.data))
-              this.$message.success('Registration success!', 10);
-              setTimeout(()=> this.$router.push('verification'),1000)
+              this.$message.success('Registration success!', 5);
+              this.$router.push('verification')
             }).catch(err => {
               console.log(err)
-              this.$message.error('Registration failed!', 10);
+              this.$message.error('Registration failed!', 5);
             })
           }
         });

@@ -10,7 +10,7 @@
           <CodeInput className="c-verify__code" :fieldWidth="45" :fieldHeight="45" :fields="5" :autoFocus="false" :loading="false" class="input" v-on:change="onChange" v-on:complete="onComplete" />
         </div>
         <div class="c-verify__btnWrap">
-          <button class="c-btn__resend">Resend</button>
+          <button @click.prevent="resend" class="c-btn__resend">Resend</button>
           <div class="c-verify__grp">
               <a-button class="c-btn c-btn--sub">Cancel</a-button>
               <a-button @click.prevent="verify" type="primary" class="c-btn c-btn--main" :disabled="verifyCode ? false : true">
@@ -46,12 +46,12 @@ export default {
   },
   methods: {
     verify() {
-      if(!this.dataToken) {
-        this.$message.error('Please register or login first to verify email!', 10);
+      if(!this.tokenData) {
+        this.$message.error('Please register or login first to verify email!', 5);
         return;
       }
       if(!this.verifyCode) {
-        this.$message.error('Please complete the verification code!', 10);
+        this.$message.error('Please complete the verification code!', 5);
         return;
       }
       window.axios('/auth/verification/verify',{
@@ -66,9 +66,13 @@ export default {
           "via": "email"
         }
       }).then(res => {
-        console.log(res.data)
+        if(res.data.success) {
+          this.$message.success('Email verified!', 5);
+          this.$router.push('login')
+        }
       }).catch(err => {
         console.log(err)
+        this.$message.error('Email not verified!', 5);
       })
     },
     onChange() {
@@ -76,6 +80,30 @@ export default {
     },
     onComplete(v) {
       this.verifyCode = v
+    },
+    resend() {
+      if(!this.tokenData) {
+        this.$message.error('Please register or login first to verify email!', 5);
+        return;
+      }
+      window.axios('/auth/verification/resend',{
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + this.tokenData.access_token
+        },
+        data: {
+          "via": "email"
+        }
+      }).then(res => {
+        if(res.data.success) {
+          this.$message.success('Email verification code resent!', 5);
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('Email verification code not sent!', 5);
+      })
     }
   },
 }
