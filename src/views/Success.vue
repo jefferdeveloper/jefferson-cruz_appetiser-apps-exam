@@ -3,7 +3,7 @@
     <Header/>
     <div class="c-success">
       <div class="c-success__wrap">
-        <h1>You have successfully login!</h1>
+        <h1>Login successful!</h1>
         <img class="c-success__img" src="@/assets/image.svg" alt="">
       </div>
     </div>
@@ -24,7 +24,7 @@ export default {
     min-height: 100vh;
     width: 100%;
     background-color: #F9F9F9;
-    padding-top: 30px;
+    padding: 30px 20px 20px 20px;
     @media screen and (min-width: 1000px) {
       padding: 70px 30px 50px 30px;
     }
