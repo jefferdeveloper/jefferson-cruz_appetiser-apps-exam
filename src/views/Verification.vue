@@ -12,7 +12,11 @@
         <div class="c-verify__btnWrap">
           <button @click.prevent="resend" class="c-btn__resend">Resend</button>
           <div class="c-verify__grp">
-              <a-button class="c-btn c-btn--sub">Cancel</a-button>
+              <a-button class="c-btn c-btn--sub">
+                <router-link to="register">
+                  Cancel
+                </router-link>
+              </a-button>
               <a-button @click.prevent="verify" type="primary" class="c-btn c-btn--main" :disabled="verifyCode ? false : true">
                 Verify Email
               </a-button>
@@ -69,6 +73,8 @@ export default {
         if(res.data.success) {
           this.$message.success('Email verified!', 5);
           this.$router.push('login')
+        } else {
+          this.$message.error('Email not verified!', 5);
         }
       }).catch(err => {
         console.log(err)
@@ -98,7 +104,7 @@ export default {
         }
       }).then(res => {
         if(res.data.success) {
-          this.$message.success('Email verification code resent!', 5);
+          this.$message.success('Email verification code sent!', 5);
         }
       }).catch(err => {
         console.log(err)
@@ -174,5 +180,8 @@ export default {
     color: #2C66D5;
     font-size: 16px;
     font-weight: 500;
+    &:focus {
+      outline: none;
+    }
   }
 </style>

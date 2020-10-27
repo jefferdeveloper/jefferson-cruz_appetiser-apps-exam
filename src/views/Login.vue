@@ -20,7 +20,7 @@
             v-decorator="[
               'username',
               {
-                trigger: 'change',
+                trigger: 'blur',
                 rules: [
                   {
                     type: 'email',
@@ -61,7 +61,7 @@
               </router-link>
             </a-button>
             <a-button class="c-btn c-btn--main" type="primary" size="large" html-type="submit">
-              Login <img class="c-icon--img"  src="@/assets/i-login.svg" alt="">
+              Login <img class="c-icon--img" src="@/assets/i-login.svg" alt="">
             </a-button>
           </div>
         </a-form-item>
@@ -79,10 +79,10 @@
       this.form = this.$form.createForm(this, { name: 'login' });
     },
     mounted() {
-      this.form.setFieldsValue({
-        username: '1@gmail.com',
-        password: '12345678'
-      });
+      // this.form.setFieldsValue({
+      //   username: '1@gmail.com',
+      //   password: '12345678'
+      // });
     },
     methods: {
       reset() {
@@ -92,16 +92,16 @@
         e.preventDefault();
         this.form.validateFieldsAndScroll((err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
             window.axios.post('/auth/login', values).then(res => {
-              console.log(res.data)
               if(res.data.success) {
                 localStorage.setItem('tokenData',JSON.stringify(res.data.data))
                 this.$router.push('success')
+              } else {
+                this.$message.error('Username or Password is incorrect!', 5);
               }
             }).catch(err => {
               console.log(err)
-              this.$message.error('Login failed!', 5);
+              this.$message.error('Username or Password is incorrect!', 5);
             })
           }
         });

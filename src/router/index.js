@@ -7,26 +7,41 @@ import Success from '../views/Success.vue'
 
 Vue.use(VueRouter)
 
+const routeGuard = (to, from, next) => {
+  const tokenData = JSON.parse(localStorage.getItem('tokenData'))
+  if (tokenData) {
+    next()
+  } else {
+    next({path:'login'})
+  }
+}
+
 const routes = [
   {
     path: '/register',
-    name: 'Register',
+    name: 'register',
     component: Register
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: Login
   },
   {
     path: '/verification',
-    name: 'Verification',
-    component: Verification
+    name: 'verification',
+    component: Verification,
+    beforeEnter: routeGuard
   },
   {
     path: '/success',
-    name: 'Success',
-    component: Success
+    name: 'success',
+    component: Success,
+    beforeEnter: routeGuard
+  },
+  {
+    path: '**',
+    redirect: { name: 'login' }
   }
 ]
 

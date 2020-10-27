@@ -57,10 +57,15 @@
             v-decorator="[
               'password',
               {
+                trigger: 'blur',
                 rules: [
                   {
                     required: true,
                     message: 'Please input password!',
+                  },
+                  {
+                    min: 8,
+                    message: 'Please input at least 8 characters!',
                   }
                 ],
               },
@@ -75,6 +80,7 @@
             v-decorator="[
               'password_confirmation',
               {
+                trigger: 'blur',
                 rules: [
                   {
                     required: true,
@@ -104,31 +110,23 @@
           <p class="c-terms">By signing up, I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></p>
         </a-form-item>
       </a-form>
-
     </div>
-
   </div>
 </div>
 </template>
 
 <script>
   export default {
-    data: () => ({
-      email: '',
-      full_name: '',
-      password: '',
-      password_confirmation: ''
-    }),
     beforeCreate() {
       this.form = this.$form.createForm(this, { name: 'register' });
     },
     mounted() {
-      this.form.setFieldsValue({
-        email: '1@gmail.com',
-        full_name: 'John Doe',
-        password: '12345678',
-        password_confirmation: '12345678'
-      });
+      // this.form.setFieldsValue({
+      //   email: '1@gmail.com',
+      //   full_name: 'John Doe',
+      //   password: '12345678',
+      //   password_confirmation: '12345678'
+      // });
     },
     methods: {
       reset() {
@@ -138,15 +136,18 @@
         e.preventDefault();
         this.form.validateFieldsAndScroll((err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
             window.axios.post('/auth/register', values).then(res => {
-              console.log(res.data)
-              localStorage.setItem('tokenData',JSON.stringify(res.data.data))
-              this.$message.success('Registration success!', 5);
-              this.$router.push('verification')
+              if(res.data.success) {
+                localStorage.setItem('tokenData',JSON.stringify(res.data.data))
+                this.reset()
+                this.$message.success('Registration success!', 5)
+                this.$router.push('verification')
+              } else {
+                this.$message.error('Registration failed!', 5)
+              }
             }).catch(err => {
               console.log(err)
-              this.$message.error('Registration failed!', 5);
+              this.$message.error('Registration failed!', 5)
             })
           }
         });
@@ -166,8 +167,7 @@
       checkEmailExist(rule, value, callback) {
         window.axios.post('/auth/check-email',{
           email: value
-        }).then(res => {
-          console.log(res.data)
+        }).then(() => {
           callback('Email already exist!');
         }).catch(() => {
           callback();

@@ -14,29 +14,6 @@ export default {
   $c-main: #2C66D5;
   $s-d: 1000px;
   .c-app {
-    .c-btn {
-      height: 50px;
-    }
-    .c-btn--main {
-       background-color: $c-main;
-    }
-    .c-btn--sub {
-      color: #000;
-    }
-    .ant-btn-primary:hover, .ant-btn-primary:focus {
-      color: #fff;
-      background-color: darken($c-main, 10%);
-      border-color: $c-main;
-    }
-  }
-  .c-main {
-    display: grid;
-    width: 100%;
-    min-height: 100vh;
-    font-family: 'Lato', sans-serif;
-    @media screen and (min-width: $s-d) {
-      grid-template-columns: 1fr 1fr;
-    }
     h1 {
       font-size: 40px;
       color: #000;
@@ -60,6 +37,29 @@ export default {
     }
     p {
       font-size: 16px;
+    }
+    .c-btn {
+      height: 50px;
+    }
+    .c-btn--main {
+       background-color: $c-main;
+    }
+    .c-btn--sub {
+      color: #000;
+    }
+    .ant-btn-primary:hover, .ant-btn-primary:focus {
+      color: #fff;
+      background-color: darken($c-main, 10%);
+      border-color: $c-main;
+    }
+  }
+  .c-main {
+    display: grid;
+    width: 100%;
+    min-height: 100vh;
+    font-family: 'Lato', sans-serif;
+    @media screen and (min-width: $s-d) {
+      grid-template-columns: 1fr 1fr;
     }
   }
   .c-banner {
@@ -96,7 +96,7 @@ export default {
     display: block;
     width: 100%;
     padding: 20px;
-    max-width: 600px;
+    max-width: 550px;
   }
   .c-btn__wrap {
     display: grid;
