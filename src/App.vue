@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="c-app">
     <router-view/>
   </v-app>
 </template>
@@ -12,12 +12,29 @@ export default {
 
 <style lang="scss">
   $c-main: #2C66D5;
+  $s-d: 1000px;
+  .c-app {
+    .c-btn {
+      height: 50px;
+    }
+    .c-btn--main {
+       background-color: $c-main;
+    }
+    .c-btn--sub {
+      color: #000;
+    }
+    .ant-btn-primary:hover, .ant-btn-primary:focus {
+      color: #fff;
+      background-color: darken($c-main, 10%);
+      border-color: $c-main;
+    }
+  }
   .c-main {
     display: grid;
     width: 100%;
     min-height: 100vh;
     font-family: 'Lato', sans-serif;
-    @media screen and (min-width: 1000px) {
+    @media screen and (min-width: $s-d) {
       grid-template-columns: 1fr 1fr;
     }
     h1 {
@@ -44,24 +61,10 @@ export default {
     p {
       font-size: 16px;
     }
-    .c-btn {
-      height: 50px;
-    }
-    .c-btn--main {
-       background-color: $c-main;
-    }
-    .c-btn--sub {
-      color: #000;
-    }
-    .ant-btn-primary:hover, .ant-btn-primary:focus {
-      color: #fff;
-      background-color: darken($c-main, 10%);
-      border-color: $c-main;
-    }
   }
   .c-banner {
     display: none;
-    @media screen and (min-width: 1000px) {
+    @media screen and (min-width: $s-d) {
       display: block;
       background-image: url('./assets/bg.png');
       background-repeat: no-repeat;
@@ -98,8 +101,11 @@ export default {
   .c-btn__wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 30px;
+    grid-gap: 15px;
     margin-top: 30px;
+    @media screen and (min-width: $s-d) {
+      grid-gap: 30px;
+    }
   }
   .c-icon--right {
     position: absolute;

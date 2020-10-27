@@ -142,11 +142,12 @@
             console.log('Received values of form: ', values);
             window.axios.post('/auth/register', values).then(res => {
               console.log(res.data)
+              localStorage.setItem('tokenData',JSON.stringify(res.data.data))
+              this.$message.success('Registration success!', 10);
+              setTimeout(()=> this.$router.push('verification'),1000)
             }).catch(err => {
               console.log(err)
-              this.$message.error(
-                'Registration failed!', 10
-              );
+              this.$message.error('Registration failed!', 10);
             })
           }
         });
